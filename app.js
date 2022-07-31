@@ -7,12 +7,11 @@ const postsRoutes = require("./routes/posts");
 const userRoutes = require("./routes/user");
 
 const app = express();
-
 mongoose
   .connect(
     "mongodb+srv://sid:" +
       process.env.MONGO_ATLAS_PW +
-      "@cluster0.8cx44.mongodb.net/node-angular?retryWrites=true&w=majority"
+      "@cluster0.8cx44.mongodb.net/?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("Database Connection Successful!");

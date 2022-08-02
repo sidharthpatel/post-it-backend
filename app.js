@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
  * Allows access to any folder with /images
  * Any request going to /images is re-routed to backend/images
  */
-app.use("/images", express.static(path.join("backend/images")));
+app.use("/images", express.static(path.join("images")));
 
 /* Middleware to deal with CORS problem. ** Details in Server.js file. */
 

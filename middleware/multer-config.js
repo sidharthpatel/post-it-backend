@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
     }
 
     // Callback is relevant to the server.js file which is why we must add backend/..
-    callback(error, "backend/images");
+    callback(error, "images");
   },
   filename: (req, file, callback) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");

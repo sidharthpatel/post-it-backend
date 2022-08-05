@@ -12,9 +12,11 @@
         "multer": "^1.4.4"
     },
     "scripts": {
-        "start:server": "nodemon server.js"
+        "start:server": "nodemon server.js",
+        "start:debug": "nodemon --inspect=7000 server.js"
     },
     "devDependencies": {
+        "cors": "^2.8.5",
         "nodemon": "^2.0.19"
     }
 }

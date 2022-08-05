@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require('cors');
 
 const postsRoutes = require("./routes/posts");
 const userRoutes = require("./routes/user");
@@ -16,7 +17,8 @@ mongoose
   .then(() => {
     console.log("Database Connection Successful!");
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err);
     console.log("Connection Failed!");
   });
 
@@ -40,20 +42,22 @@ app.use("/images", express.static(path.join("images")));
  * Our key is a browser identifier which will give access, but to what??
  * the star * represents a universal symbol. So, we are giving universal access.
  */
-app.use((request, response, next) => {
-  response.setHeader("Access-Control-Allow-Origin", "*");
-  /** Any extra headers that may be blocked can also gain access */
-  response.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  /** type of methods or http words can be used to send request */
-  response.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
-  );
-  next();
-});
+// app.use((request, response, next) => {
+//   response.setHeader("Access-Control-Allow-Origin", "*");
+//   /** Any extra headers that may be blocked can also gain access */
+//   response.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   /** type of methods or http words can be used to send request */
+//   response.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+//   );
+//   next();
+// });
+
+app.use(cors());
 
 /**
  * The app will only accept routes from the router which will contain '/api/posts' routes.

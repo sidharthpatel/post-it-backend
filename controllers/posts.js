@@ -5,14 +5,13 @@ exports.createPost = (request, response, next) => {
    * URL to the image file.
    * request.protocol: Returns the type of protocol you are using ('http/https')
    */
-  const url = request.protocol + "://" + request.get("host");
 
   /* One post */
   const post = new Post({
     title: request.body.title,
     content: request.body.content,
     /* request.file: Property provided by Multer to extract file's name. */
-    imagePath: url + "/images/" + request.file.filename,
+    imagePath: request.file.location,
     creator: request.userData.userId,
   });
   /** Default Mongoose method */
@@ -36,8 +35,7 @@ exports.updatePost = (req, res, next) => {
   //Default image path naming convention
   let imagePath = req.body.imagePath;
   if (req.file) {
-    const url = req.protocol + "://" + req.get("host");
-    imagePath = url + "/images/" + req.file.filename;
+    imagePath = req.file.location;
   }
   const post = new Post({
     _id: req.body.id,

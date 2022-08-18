@@ -1,4 +1,6 @@
 // Multer is a node.js middleware for handling file uploads.
+const aws = require("aws-sdk");
+const multerS3 = require("multer-s3");
 const multer = require("multer");
 
 const MIME_TYPE_MAP = {
@@ -7,24 +9,29 @@ const MIME_TYPE_MAP = {
   "image/jpg": "jpg",
 };
 
-// Multer configuration (where multer should put files)
-const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    // Security measure if file type does not match MIME_TYPE_MAP by throwing error
-    const isValid = MIME_TYPE_MAP[file.mimetype];
-    let error = new Error("Invalid mime type");
-    if (isValid) {
-      error = null;
-    }
-
-    // Callback is relevant to the server.js file which is why we must add backend/..
-    callback(error, "images");
-  },
-  filename: (req, file, callback) => {
-    const name = file.originalname.toLowerCase().split(" ").join("-");
-    const ext = MIME_TYPE_MAP[file.mimetype];
-    callback(null, name + "-" + Date.now() + "." + ext);
-  },
+/**
+ * Connecting to Amason S3 Bucket
+ */
+const s3 = new aws.S3({
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: process.env.S3_BUCKET_REGION,
 });
 
-module.exports = multer({ storage: storage }).single("image");
+const upload = () =>
+  multer({
+    storage: multerS3({
+      s3,
+      bucket: "post-it-storage",
+      metadata: (req, file, callback) => {
+        callback(null, { fieldName: file.fieldname });
+      },
+      key: (req, file, callback) => {
+        const name = file.originalname.toLowerCase().split(" ").join("-");
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        callback(null, name + "-" + Date.now() + "." + ext);
+      },
+    }),
+  });
+
+module.exports = upload().single("image");
